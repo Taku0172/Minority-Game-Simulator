@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Minority Game Simulator</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="container">
+        <header>
+            <h1>Minority Game Simulator</h1>
+
+            <p class="description">
+                エージェント数と記憶長を設定し、
+                マイノリティゲームの混雑と効率性を観察します。
+            </p>
+        </header>
+
+        <section class="control-panel">
+            <div class="input-group">
+                <label for="agentCount">エージェント人数</label>
+
+                <input
+                    type="number"
+                    id="agentCount"
+                    min="3"
+                    max="1001"
+                    step="2"
+                    value="101"
+                >
+
+                <small>奇数を入力してください。</small>
+            </div>
+
+            <div class="input-group">
+                <label for="memoryLength">記憶長 m</label>
+
+                <select id="memoryLength">
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+            <button id="runButton">
+                シミュレーション開始
+            </button>
+
+            <p id="errorMessage" class="error-message"></p>
+        </section>
+
+        <section class="summary-panel">
+            <h2>計算結果</h2>
+
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <span>α</span>
+                    <strong id="alphaValue">-</strong>
+                </div>
+
+                <div class="summary-card">
+                    <span>σ²</span>
+                    <strong id="varianceValue">-</strong>
+                </div>
+
+                <div class="summary-card">
+                    <span>σ² / N</span>
+                    <strong id="normalizedVarianceValue">-</strong>
+                </div>
+            </div>
+
+            <p id="statusMessage">
+                条件を設定してシミュレーションを開始してください。
+            </p>
+        </section>
+
+        <section class="chart-panel">
+            <h2>1を選んだ人数の推移</h2>
+            <canvas id="attendanceChart"></canvas>
+        </section>
+
+        <section class="chart-panel">
+            <h2>人数差の推移</h2>
+            <canvas id="differenceChart"></canvas>
+        </section>
+
+        <section class="chart-panel">
+            <h2>α と σ²/N の関係</h2>
+            <canvas id="phaseChart"></canvas>
+        </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
