@@ -31,3 +31,50 @@ export function getActionFromStrategy(strategy, historyIndex) {
 
     return strategy[historyIndex];
 }
+
+export function createAgent(
+    memoryLength,
+    strategyCount = 2,
+    randomFn = Math.random
+) {
+    if (
+        !Number.isInteger(strategyCount) ||
+        strategyCount < 1
+    ) {
+        throw new Error(
+            "strategyCount must be a positive integer."
+        );
+    }
+
+    const strategies = Array.from(
+        { length: strategyCount },
+        () => generateStrategy(memoryLength, randomFn)
+    );
+
+    const virtualScores = Array(strategyCount).fill(0);
+
+    return {
+        strategies,
+        virtualScores
+    };
+}
+
+export function selectStrategy(agent, randomFn = Math.random) {
+
+    const maxScore = Math.max(...agent.virtualScores);
+
+    const bestIndices = [];
+
+    agent.virtualScores.forEach((score, index) => {
+        if (score === maxScore) {
+            bestIndices.push(index);
+        }
+    });
+
+    const chosenIndex =
+        bestIndices[
+            Math.floor(randomFn() * bestIndices.length)
+        ];
+
+    return chosenIndex;
+}

@@ -2,7 +2,9 @@ import { describe, expect, test } from "vitest";
 
 import {
     generateStrategy,
-    getActionFromStrategy
+    getActionFromStrategy,
+    createAgent,
+    selectStrategy
 } from "./strategy.js";
 
 describe("generateStrategy", () => {
@@ -61,4 +63,68 @@ describe("getActionFromStrategy", () => {
             () => getActionFromStrategy(strategy, 4)
         ).toThrow();
     });
+});
+
+describe("createAgent", () => {
+    test("エージェントは2つの戦略を持つ", () => {
+        const agent = createAgent(2);
+
+        expect(agent.strategies).toHaveLength(2);
+    });
+
+    test("各戦略の長さは2のm乗になる", () => {
+        const agent = createAgent(3);
+
+        expect(agent.strategies[0]).toHaveLength(8);
+        expect(agent.strategies[1]).toHaveLength(8);
+    });
+
+    test("仮想得点は0から始まる", () => {
+        const agent = createAgent(2);
+
+        expect(agent.virtualScores).toEqual([0, 0]);
+    });
+
+    test("戦略数を3つに変更できる", () => {
+        const agent = createAgent(2, 3);
+
+        expect(agent.strategies).toHaveLength(3);
+        expect(agent.virtualScores).toEqual([0, 0, 0]);
+    });
+
+    test("戦略数が0ならエラーになる", () => {
+        expect(
+            () => createAgent(2, 0)
+        ).toThrow();
+    });
+});
+
+describe("selectStrategy", () => {
+
+    test("高得点の戦略を選ぶ", () => {
+
+        const agent = {
+            virtualScores: [3, 7]
+        };
+
+        expect(
+            selectStrategy(agent)
+        ).toBe(1);
+
+    });
+
+    test("同点ならランダムに選ぶ", () => {
+
+        const agent = {
+            virtualScores: [5, 5]
+        };
+
+        const alwaysFirst = () => 0;
+
+        expect(
+            selectStrategy(agent, alwaysFirst)
+        ).toBe(0);
+
+    });
+
 });
