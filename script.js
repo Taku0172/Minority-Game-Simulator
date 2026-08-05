@@ -1,3 +1,7 @@
+import {
+    runRepeatedSimulations
+} from "./experiment.js";
+
 import { simulateGame } from "./gameLogic.js";
 
 import {
@@ -220,9 +224,21 @@ runButton.addEventListener("click", () => {
                 agentCount
             );
         
+        const repeatedResult =
+            runRepeatedSimulations(
+                agentCount,
+                memoryLength,
+                100,
+                rounds
+            );
+
+        const averageNormalizedVariance =
+            repeatedResult.averageNormalizedVariance;    
+
+
         phasePoints.push({
             x: alpha,
-            y: normalizedVariance
+            y: averageNormalizedVariance
         });
 
         alphaValue.textContent =
