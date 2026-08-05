@@ -8,6 +8,8 @@ import {
 
 let attendanceChart = null;
 
+let differenceChart = null;
+
 const runButton = document.getElementById("runButton");
 const agentCountInput = document.getElementById("agentCount");
 const memoryLengthSelect = document.getElementById("memoryLength");
@@ -78,6 +80,53 @@ function drawAttendanceChart(
     });
 }
 
+function drawDifferenceChart(differenceHistory) {
+    const canvas =
+        document.getElementById("differenceChart");
+
+    const labels = differenceHistory.map(
+        (_, index) => index + 1
+    );
+
+    if (differenceChart !== null) {
+        differenceChart.destroy();
+    }
+
+    differenceChart = new Chart(canvas, {
+        type: "line",
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: "0と1の人数差",
+                    data: differenceHistory,
+                    borderWidth: 2,
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            animation: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "期"
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: "人数差"
+                    }
+                }
+            }
+        }
+    });
+}
+
 runButton.addEventListener("click", () => {
     const agentCount = Number(agentCountInput.value);
     const memoryLength =
@@ -140,6 +189,10 @@ runButton.addEventListener("click", () => {
         drawAttendanceChart(
             result.attendanceHistory,
             agentCount
+        );
+
+        drawDifferenceChart(
+            result.differenceHistory
         );
 
         statusMessage.textContent =
