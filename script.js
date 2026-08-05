@@ -16,6 +16,7 @@ let phaseChart = null;
 const phasePoints = [];
 
 const runButton = document.getElementById("runButton");
+const runSweepButton = document.getElementById("runSweepButton");
 const agentCountInput = document.getElementById("agentCount");
 const memoryLengthSelect = document.getElementById("memoryLength");
 const errorMessage = document.getElementById("errorMessage");
@@ -145,9 +146,11 @@ function drawPhaseChart() {
         data: {
             datasets: [
                 {
-                    label: "シミュレーション結果",
+                    label: "100回平均",
                     data: phasePoints,
-                    pointRadius: 5
+                    pointRadius: 5,
+                    showLine: true,
+                    borderWidth: 2
                 }
             ]
         },
@@ -273,5 +276,85 @@ runButton.addEventListener("click", () => {
             "シミュレーションに失敗しました.";
     } finally {
         runButton.disabled = false;
+    }
+});
+
+runSweepButton.addEventListener("click", () => {
+    const agentCount = Number(agentCountInput.value);
+
+    if (
+        !Number.isInteger(agentCount) ||
+        agentCount < 3
+    ) {
+        errorMessage.textContent =
+            "エージェント人数は3以上の整数にしてください。";
+        return;
+    }
+
+    if (agentCount % 2 === 0) {
+        errorMessage.textContent =
+            "エージェント人数は奇数にしてください。";
+        return;
+    }
+
+    errorMessage.textContent = "";
+    runButton.disabled = true;
+    runSweepButton.disabled = true;
+
+    statusMessage.textContent =
+        "記憶長m=2〜10について、各条件を100回ずつ計算しています。";
+
+    try {
+        const rounds = 500;
+
+        // 以前の相図上の点を消す
+        phasePoints.length = 0;
+
+        for (
+            let memoryLength = 2;
+            memoryLength <= 10;
+            memoryLength++
+        ) {
+            const alpha = calculateAlpha(
+                memoryLength,
+                agentCount
+            );
+
+            const repeatedResult =
+                runRepeatedSimulations(
+                    agentCount,
+                    memoryLength,
+                    100,
+                    rounds
+                );
+
+            phasePoints.push({
+                x: alpha,
+                y:
+                    repeatedResult
+                        .averageNormalizedVariance,
+                memoryLength
+            });
+        }
+
+        // αの小さい順に並べる
+        phasePoints.sort(
+            (pointA, pointB) =>
+                pointA.x - pointB.x
+        );
+
+        drawPhaseChart();
+
+        statusMessage.textContent =
+            `N=${agentCount}について、m=2〜10の比較が完了しました。`;
+    } catch (error) {
+        errorMessage.textContent =
+            `エラー：${error.message}`;
+
+        statusMessage.textContent =
+            "一括比較に失敗しました。";
+    } finally {
+        runButton.disabled = false;
+        runSweepButton.disabled = false;
     }
 });
