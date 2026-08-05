@@ -7,8 +7,9 @@ import {
 } from "./statistics.js";
 
 let attendanceChart = null;
-
 let differenceChart = null;
+let phaseChart = null;
+const phasePoints = [];
 
 const runButton = document.getElementById("runButton");
 const agentCountInput = document.getElementById("agentCount");
@@ -127,6 +128,48 @@ function drawDifferenceChart(differenceHistory) {
     });
 }
 
+function drawPhaseChart() {
+    const canvas =
+        document.getElementById("phaseChart");
+
+    if (phaseChart !== null) {
+        phaseChart.destroy();
+    }
+
+    phaseChart = new Chart(canvas, {
+        type: "scatter",
+        data: {
+            datasets: [
+                {
+                    label: "シミュレーション結果",
+                    data: phasePoints,
+                    pointRadius: 5
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            animation: false,
+            scales: {
+                x: {
+                    type: "linear",
+                    title: {
+                        display: true,
+                        text: "α = 2^m / N"
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: "σ² / N"
+                    }
+                }
+            }
+        }
+    });
+}
+
 runButton.addEventListener("click", () => {
     const agentCount = Number(agentCountInput.value);
     const memoryLength =
@@ -176,6 +219,11 @@ runButton.addEventListener("click", () => {
                 variance,
                 agentCount
             );
+        
+        phasePoints.push({
+            x: alpha,
+            y: normalizedVariance
+        });
 
         alphaValue.textContent =
             alpha.toFixed(4);
@@ -194,6 +242,8 @@ runButton.addEventListener("click", () => {
         drawDifferenceChart(
             result.differenceHistory
         );
+
+        drawPhaseChart();
 
         statusMessage.textContent =
             `${rounds}期のシミュレーションが完了しました。`;
