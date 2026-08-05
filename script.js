@@ -6,6 +6,8 @@ import {
     calculateNormalizedVariance
 } from "./statistics.js";
 
+let attendanceChart = null;
+
 const runButton = document.getElementById("runButton");
 const agentCountInput = document.getElementById("agentCount");
 const memoryLengthSelect = document.getElementById("memoryLength");
@@ -15,6 +17,66 @@ const alphaValue = document.getElementById("alphaValue");
 const varianceValue = document.getElementById("varianceValue");
 const normalizedVarianceValue =
     document.getElementById("normalizedVarianceValue");
+
+function drawAttendanceChart(
+    attendanceHistory,
+    agentCount
+) {
+    const canvas =
+        document.getElementById("attendanceChart");
+
+    const labels = attendanceHistory.map(
+        (_, index) => index + 1
+    );
+
+    if (attendanceChart !== null) {
+        attendanceChart.destroy();
+    }
+
+    attendanceChart = new Chart(canvas, {
+        type: "line",
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: "1を選んだ人数",
+                    data: attendanceHistory,
+                    borderWidth: 2,
+                    pointRadius: 0
+                },
+                {
+                    label: "人数の中央 N/2",
+                    data: labels.map(
+                        () => agentCount / 2
+                    ),
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    borderDash: [6, 6]
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            animation: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "期"
+                    }
+                },
+                y: {
+                    min: 0,
+                    max: agentCount,
+                    title: {
+                        display: true,
+                        text: "1を選んだ人数"
+                    }
+                }
+            }
+        }
+    });
+}
 
 runButton.addEventListener("click", () => {
     const agentCount = Number(agentCountInput.value);
@@ -74,6 +136,11 @@ runButton.addEventListener("click", () => {
 
         normalizedVarianceValue.textContent =
             normalizedVariance.toFixed(4);
+
+        drawAttendanceChart(
+            result.attendanceHistory,
+            agentCount
+        );
 
         statusMessage.textContent =
             `${rounds}期のシミュレーションが完了しました。`;
