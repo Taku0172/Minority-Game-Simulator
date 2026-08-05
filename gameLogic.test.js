@@ -3,7 +3,8 @@ import { describe, expect, test } from "vitest";
 import {
     determineMinority,
     updateHistory,
-    playRound
+    playRound,
+    simulateGame
 } from "./gameLogic.js";
 
 describe("determineMinority", () => {
@@ -112,5 +113,76 @@ describe("playRound", () => {
         expect(agents[0].virtualScores).toEqual([0, 1]);
         expect(agents[1].virtualScores).toEqual([0, 0]);
         expect(agents[2].virtualScores).toEqual([1, 1]);
+    });
+});
+
+describe("simulateGame", () => {
+    test("指定したラウンド数だけ結果を保存する", () => {
+        const result = simulateGame(
+            101,
+            2,
+            500
+        );
+
+        expect(
+            result.attendanceHistory
+        ).toHaveLength(500);
+
+        expect(
+            result.differenceHistory
+        ).toHaveLength(500);
+
+        expect(
+            result.minorityHistory
+        ).toHaveLength(500);
+    });
+
+    test("各期の1選択人数は0以上N以下である", () => {
+        const agentCount = 101;
+
+        const result = simulateGame(
+            agentCount,
+            3,
+            50
+        );
+
+        const isValid =
+            result.attendanceHistory.every(
+                count =>
+                    Number.isInteger(count) &&
+                    count >= 0 &&
+                    count <= agentCount
+            );
+
+        expect(isValid).toBe(true);
+    });
+
+    test("人数差は必ず1以上の奇数になる", () => {
+        const result = simulateGame(
+            101,
+            3,
+            50
+        );
+
+        const isValid =
+            result.differenceHistory.every(
+                difference =>
+                    difference >= 1 &&
+                    difference % 2 === 1
+            );
+
+        expect(isValid).toBe(true);
+    });
+
+    test("偶数人数ならエラーになる", () => {
+        expect(
+            () => simulateGame(100, 3, 50)
+        ).toThrow();
+    });
+
+    test("記憶長が範囲外ならエラーになる", () => {
+        expect(
+            () => simulateGame(101, 11, 50)
+        ).toThrow();
     });
 });
