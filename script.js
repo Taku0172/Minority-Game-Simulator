@@ -203,12 +203,14 @@ runButton.addEventListener("click", () => {
         "シミュレーションを実行しています。";
 
     try {
-        const rounds = 500;
+        const warmupRounds = 1000;
+        const measurementRounds = 5000;
 
         const result = simulateGame(
             agentCount,
             memoryLength,
-            rounds
+            warmupRounds,
+            measurementRounds
         );
 
         const alpha = calculateAlpha(
@@ -232,7 +234,8 @@ runButton.addEventListener("click", () => {
                 agentCount,
                 memoryLength,
                 100,
-                rounds
+                warmupRounds,
+                measurementRounds
             );
 
         const averageNormalizedVariance =
@@ -265,7 +268,7 @@ runButton.addEventListener("click", () => {
         drawPhaseChart();
 
         statusMessage.textContent =
-            `${rounds}期のシミュレーションが完了しました。`;
+            `1000期のウォームアップ後、5000期の測定が完了しました。`;
 
         console.log(result);
     } catch (error) {
@@ -302,10 +305,12 @@ runSweepButton.addEventListener("click", () => {
     runSweepButton.disabled = true;
 
     statusMessage.textContent =
-        "記憶長m=2〜10について、各条件を100回ずつ計算しています。";
+        "m=2〜10について、500期のウォームアップ後、2000期を10回ずつ計算しています。";
 
     try {
-        const rounds = 500;
+        const warmupRounds = 500;
+        const measurementRounds = 1000;
+        const repetition = 10;
 
         // 以前の相図上の点を消す
         phasePoints.length = 0;
@@ -324,8 +329,9 @@ runSweepButton.addEventListener("click", () => {
                 runRepeatedSimulations(
                     agentCount,
                     memoryLength,
-                    100,
-                    rounds
+                    repetition,
+                    warmupRounds,
+                    measurementRounds
                 );
 
             phasePoints.push({
@@ -346,7 +352,7 @@ runSweepButton.addEventListener("click", () => {
         drawPhaseChart();
 
         statusMessage.textContent =
-            `N=${agentCount}について、m=2〜10の比較が完了しました。`;
+            `N=${agentCount}について、m=2〜10の一括比較が完了しました。`;
     } catch (error) {
         errorMessage.textContent =
             `エラー：${error.message}`;
