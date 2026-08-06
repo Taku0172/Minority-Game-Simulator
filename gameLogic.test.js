@@ -117,24 +117,25 @@ describe("playRound", () => {
 });
 
 describe("simulateGame", () => {
-    test("指定したラウンド数だけ結果を保存する", () => {
+    test("指定した測定ラウンド数だけ結果を保存する", () => {
         const result = simulateGame(
             101,
             2,
-            500
+            10,
+            50
         );
 
         expect(
             result.attendanceHistory
-        ).toHaveLength(500);
+        ).toHaveLength(50);
 
         expect(
             result.differenceHistory
-        ).toHaveLength(500);
+        ).toHaveLength(50);
 
         expect(
             result.minorityHistory
-        ).toHaveLength(500);
+        ).toHaveLength(50);
     });
 
     test("各期の1選択人数は0以上N以下である", () => {
@@ -143,6 +144,7 @@ describe("simulateGame", () => {
         const result = simulateGame(
             agentCount,
             3,
+            10,
             50
         );
 
@@ -161,6 +163,7 @@ describe("simulateGame", () => {
         const result = simulateGame(
             101,
             3,
+            10,
             50
         );
 
@@ -176,13 +179,23 @@ describe("simulateGame", () => {
 
     test("偶数人数ならエラーになる", () => {
         expect(
-            () => simulateGame(100, 3, 50)
+            () => simulateGame(
+                100,
+                3,
+                10,
+                50
+            )
         ).toThrow();
     });
 
     test("記憶長が範囲外ならエラーになる", () => {
         expect(
-            () => simulateGame(101, 11, 50)
+            () => simulateGame(
+                101,
+                11,
+                10,
+                50
+            )
         ).toThrow();
     });
 });

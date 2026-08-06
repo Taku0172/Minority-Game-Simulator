@@ -9,7 +9,8 @@ export function runRepeatedSimulations(
     agentCount,
     memoryLength,
     repetitions = 100,
-    rounds = 500,
+    warmupRounds = 1000,
+    measurementRounds = 5000,
     strategyCount = 2,
     randomFn = Math.random
 ) {
@@ -32,7 +33,8 @@ export function runRepeatedSimulations(
         const result = simulateGame(
             agentCount,
             memoryLength,
-            rounds,
+            warmupRounds,
+            measurementRounds,
             strategyCount,
             randomFn
         );

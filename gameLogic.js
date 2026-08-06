@@ -107,7 +107,8 @@ export function playRound(
 export function simulateGame(
     agentCount,
     memoryLength,
-    rounds = 500,
+    warmupRounds = 1000,
+    measurementRounds = 5000,
     strategyCount = 2,
     randomFn = Math.random
 ) {
@@ -131,9 +132,21 @@ export function simulateGame(
         );
     }
 
-    if (!Number.isInteger(rounds) || rounds < 1) {
+    if (
+        !Number.isInteger(warmupRounds) ||
+        warmupRounds < 0
+    ){
         throw new Error(
-            "rounds must be a positive integer."
+            "warmupRounds must be a non-negative integer."
+        );
+    }
+
+    if (
+        !Number.isInteger(measurementRounds) ||
+        measurementRounds < 1
+    ){
+        throw new Error(
+            "mesurementRounds must be a positive integer."
         );
     }
 
@@ -168,7 +181,24 @@ export function simulateGame(
     const differenceHistory = [];
     const minorityHistory = [];
 
-    for (let round = 0; round < rounds; round++) {
+    for (
+        let round = 0;
+        round < warmupRounds;
+        round ++
+    ) {
+        const roundResult = playRound(
+            agents,
+            currentHistory,
+            randomFn
+        );
+        currentHistory = updateHistory(
+            currentHistory,
+            roundResult.minorityAction,
+            memoryLength
+        );
+    }
+
+    for (let round = 0; round < measurementRounds; round++) {
         const roundResult = playRound(
             agents,
             currentHistory,
