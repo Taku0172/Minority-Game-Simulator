@@ -177,7 +177,7 @@ function drawPhaseChart() {
     });
 }
 
-runButton.addEventListener("click", () => {
+runButton.addEventListener("click", async () => {
     const agentCount = Number(agentCountInput.value);
     const memoryLength =
         Number(memoryLengthSelect.value);
@@ -201,6 +201,8 @@ runButton.addEventListener("click", () => {
     runButton.disabled = true;
     statusMessage.textContent =
         "シミュレーションを実行しています。";
+
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     try {
         const warmupRounds = 1000;
@@ -282,7 +284,7 @@ runButton.addEventListener("click", () => {
     }
 });
 
-runSweepButton.addEventListener("click", () => {
+runSweepButton.addEventListener("click", async () => {
     const agentCount = Number(agentCountInput.value);
 
     if (
@@ -306,6 +308,8 @@ runSweepButton.addEventListener("click", () => {
 
     statusMessage.textContent =
         "m=2〜10について、500期のウォームアップ後、2000期を10回ずつ計算しています。";
+
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     try {
         const warmupRounds = 500;
