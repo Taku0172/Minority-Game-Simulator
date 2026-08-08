@@ -26,40 +26,6 @@ const varianceValue = document.getElementById("varianceValue");
 const normalizedVarianceValue =
     document.getElementById("normalizedVarianceValue");
 
-const pointLabelPlugin = {
-    id: "pointLabelPlugin",
-
-    afterDatasetsDraw(chart) {
-        const { ctx } = chart;
-
-        chart.data.datasets.forEach((dataset, datasetIndex) => {
-            const meta = chart.getDatasetMeta(datasetIndex);
-
-            meta.data.forEach((point, index) => {
-                const m = dataset.data[index]?.m;
-
-                if (m === undefined) {
-                    return;
-                }
-
-                ctx.save();
-
-                ctx.font = "12px Arial";
-                ctx.textAlign = "left";
-                ctx.textBaseline = "middle";
-
-                ctx.fillText(
-                    `m=${m}`,
-                    point.x + 7,
-                    point.y - 7
-                );
-
-                ctx.restore();
-            });
-        });
-    }
-};
-
 const phasePointLabelPlugin = {
     id: "phasePointLabelPlugin",
 
@@ -210,10 +176,11 @@ function drawPhaseChart() {
 
     phaseChart = new Chart(canvas, {
         type: "scatter",
+
         data: {
             datasets: [
                 {
-                    label: "100回平均",
+                    label: "平均 σ²/N",
                     data: phasePoints,
                     pointRadius: 5,
                     showLine: true,
@@ -221,9 +188,15 @@ function drawPhaseChart() {
                 }
             ]
         },
+
+        plugins: [
+            phasePointLabelPlugin
+        ],
+
         options: {
             responsive: true,
             animation: false,
+
             scales: {
                 x: {
                     type: "linear",
@@ -232,6 +205,7 @@ function drawPhaseChart() {
                         text: "α = 2^m / N"
                     }
                 },
+
                 y: {
                     beginAtZero: true,
                     title: {
@@ -411,7 +385,7 @@ runSweepButton.addEventListener("click", async () => {
                 y:
                     repeatedResult
                         .averageNormalizedVariance,
-                memoryLength
+                m: memoryLength
             });
         }
 
@@ -434,48 +408,5 @@ runSweepButton.addEventListener("click", async () => {
     } finally {
         runButton.disabled = false;
         runSweepButton.disabled = false;
-    }
-});
-
-phaseChart = new Chart(canvas, {
-    type: "scatter",
-
-    data: {
-        datasets: [
-            {
-                label: "100回平均",
-                data: phasePoints,
-                pointRadius: 5,
-                showLine: true,
-                borderWidth: 2
-            }
-        ]
-    },
-
-    plugins: [
-        phasePointLabelPlugin
-    ],
-
-    options: {
-        responsive: true,
-        animation: false,
-
-        scales: {
-            x: {
-                type: "linear",
-                title: {
-                    display: true,
-                    text: "α = 2^m / N"
-                }
-            },
-
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: "σ² / N"
-                }
-            }
-        }
     }
 });
