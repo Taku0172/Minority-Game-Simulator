@@ -26,6 +26,73 @@ const varianceValue = document.getElementById("varianceValue");
 const normalizedVarianceValue =
     document.getElementById("normalizedVarianceValue");
 
+const pointLabelPlugin = {
+    id: "pointLabelPlugin",
+
+    afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+
+        chart.data.datasets.forEach((dataset, datasetIndex) => {
+            const meta = chart.getDatasetMeta(datasetIndex);
+
+            meta.data.forEach((point, index) => {
+                const m = dataset.data[index]?.m;
+
+                if (m === undefined) {
+                    return;
+                }
+
+                ctx.save();
+
+                ctx.font = "12px Arial";
+                ctx.textAlign = "left";
+                ctx.textBaseline = "middle";
+
+                ctx.fillText(
+                    `m=${m}`,
+                    point.x + 7,
+                    point.y - 7
+                );
+
+                ctx.restore();
+            });
+        });
+    }
+};
+
+const phasePointLabelPlugin = {
+    id: "phasePointLabelPlugin",
+
+    afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+
+        const dataset = chart.data.datasets[0];
+        const meta = chart.getDatasetMeta(0);
+
+        meta.data.forEach((point, index) => {
+            const dataPoint = dataset.data[index];
+
+            if (dataPoint.m === undefined) {
+                return;
+            }
+
+            ctx.save();
+
+            ctx.font = "12px Arial";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "bottom";
+
+            ctx.fillText(
+                `m=${dataPoint.m}`,
+                point.x + 7,
+                point.y - 5
+            );
+
+            ctx.restore();
+        });
+    }
+};
+
 function drawAttendanceChart(
     attendanceHistory,
     agentCount
@@ -246,7 +313,8 @@ runButton.addEventListener("click", async () => {
 
         phasePoints.push({
             x: alpha,
-            y: averageNormalizedVariance
+            y: averageNormalizedVariance,
+            m: memoryLength
         });
 
         alphaValue.textContent =
@@ -366,5 +434,48 @@ runSweepButton.addEventListener("click", async () => {
     } finally {
         runButton.disabled = false;
         runSweepButton.disabled = false;
+    }
+});
+
+phaseChart = new Chart(canvas, {
+    type: "scatter",
+
+    data: {
+        datasets: [
+            {
+                label: "100回平均",
+                data: phasePoints,
+                pointRadius: 5,
+                showLine: true,
+                borderWidth: 2
+            }
+        ]
+    },
+
+    plugins: [
+        phasePointLabelPlugin
+    ],
+
+    options: {
+        responsive: true,
+        animation: false,
+
+        scales: {
+            x: {
+                type: "linear",
+                title: {
+                    display: true,
+                    text: "α = 2^m / N"
+                }
+            },
+
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: "σ² / N"
+                }
+            }
+        }
     }
 });
