@@ -53,4 +53,3 @@ Run locally:
 npm install
 npm run test:run
 
-s

@@ -107,3 +107,263 @@ canvas {
         grid-template-columns: 1fr;
     }
 }
+
+.game-structure {
+    margin: 40px 0;
+    padding: 30px;
+    background: #f7f8fa;
+    border-radius: 12px;
+}
+
+.game-structure h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.structure-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.structure-card {
+    background: white;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: left;
+}
+
+.structure-card h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+.structure-card p {
+    margin: 0;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+/* 利得表 */
+
+.payoff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.payoff-table th,
+.payoff-table td {
+    border: 1px solid #dddddd;
+    padding: 9px;
+    text-align: center;
+}
+
+.payoff-table th {
+    background: #f1f3f5;
+}
+
+/* タブレット */
+
+@media (max-width: 800px) {
+    .structure-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* スマートフォン */
+
+@media (max-width: 550px) {
+    .structure-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .game-structure {
+        padding: 20px;
+    }
+}
+
+.round-flow {
+    margin: 40px 0;
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+}
+
+.round-flow h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.flow-row {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.flow-step {
+    flex: 1;
+    min-width: 0;
+    padding: 16px;
+    background: #f7f8fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.flow-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    background: #222222;
+    color: white;
+    font-weight: bold;
+}
+
+.flow-step h3 {
+    margin: 4px 0 10px;
+    font-size: 15px;
+}
+
+.flow-step p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.flow-arrow {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* 小さい画面 */
+
+@media (max-width: 1000px) {
+    .flow-row {
+        flex-direction: column;
+    }
+
+    .flow-arrow {
+        justify-content: center;
+        transform: rotate(90deg);
+    }
+}
+
+/* =========================
+   Parameter Guide
+========================= */
+
+.parameter-guide {
+    margin: 40px 0 24px;
+}
+
+.parameter-guide h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.parameter-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.parameter-guide-card {
+    padding: 20px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    background: #ffffff;
+    text-align: left;
+}
+
+.parameter-guide-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.parameter-guide-card p {
+    margin: 0 0 8px;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+.alpha-card {
+    background: #f7f8fa;
+}
+
+@media (max-width: 800px) {
+    .parameter-guide-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================
+   Result Guide
+========================= */
+
+.result-guide {
+    margin: 40px 0;
+    padding: 30px;
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.result-guide h2 {
+    margin-top: 0;
+    margin-bottom: 22px;
+    text-align: center;
+}
+
+.result-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.result-guide-card {
+    padding: 20px;
+    background: #f7f8fa;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.result-guide-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.result-guide-card p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.interpretation-box {
+    margin-top: 20px;
+    padding: 18px 20px;
+    background: #f7f8fa;
+    border-left: 4px solid #333333;
+    text-align: left;
+}
+
+.interpretation-box p {
+    margin: 8px 0 0;
+    line-height: 1.7;
+}
+
+@media (max-width: 800px) {
+    .result-guide-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -20,6 +20,151 @@
             </p>
         </header>
 
+        <section class="game-structure">
+            <h2>ゲームの構造</h2>
+
+            <div class="structure-grid">
+
+                <div class="structure-card">
+                    <h3>Players</h3>
+                    <p>
+                        N人のエージェントが同時にゲームへ参加します。
+                        少数派を必ず決定できるよう、Nは奇数とします。
+                    </p>
+                </div>
+
+                <div class="structure-card">
+                    <h3>Actions</h3>
+                    <p>
+                        各エージェントは毎期、
+                        0または1のどちらかを選択します。
+                    </p>
+                </div>
+
+                <div class="structure-card">
+                    <h3>Payoff</h3>
+
+                    <table class="payoff-table">
+                        <thead>
+                            <tr>
+                                <th>結果</th>
+                                <th>利得</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>少数派</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>多数派</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="structure-card">
+                    <h3>Memory</h3>
+                    <p>
+                        各エージェントは、直近m期の
+                        少数派だった選択の履歴を記憶します。
+                        履歴は次の行動を決める情報として使われます。
+                    </p>
+                </div>
+
+                <div class="structure-card">
+                    <h3>Strategies</h3>
+                    <p>
+                        各エージェントは2つの戦略を持ちます。
+                        各戦略は、過去m期の履歴ごとに
+                        0または1のどちらを選ぶかを定めています。
+                    </p>
+                </div>
+
+                <div class="structure-card">
+                    <h3>Learning</h3>
+                    <p>
+                        使用しなかった戦略も含めて毎期仮想得点を更新し、
+                        より高い得点を持つ戦略を使って
+                        次の行動を決定します。
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="round-flow">
+            <h2>1期の流れ</h2>
+
+            <div class="flow-row">
+                <div class="flow-step">
+                    <span class="flow-number">1</span>
+                    <h3>履歴を確認</h3>
+                    <p>
+                        直近m期で、0と1のどちらが
+                        少数派だったかを確認します。
+                    </p>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="flow-step">
+                    <span class="flow-number">2</span>
+                    <h3>戦略を選択</h3>
+                    <p>
+                        2つの戦略のうち、
+                        仮想得点が高い戦略を使用します。
+                    </p>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="flow-step">
+                    <span class="flow-number">3</span>
+                    <h3>0 / 1を選択</h3>
+                    <p>
+                        選んだ戦略と現在の履歴から、
+                        今期の行動を決定します。
+                    </p>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="flow-step">
+                    <span class="flow-number">4</span>
+                    <h3>少数派を決定</h3>
+                    <p>
+                        全エージェントの行動を集計し、
+                        人数の少ない側を決めます。
+                    </p>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="flow-step">
+                    <span class="flow-number">5</span>
+                    <h3>仮想得点を更新</h3>
+                    <p>
+                        保有する全戦略について、
+                        少数派を予測できた戦略に得点を加えます。
+                    </p>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="flow-step">
+                    <span class="flow-number">6</span>
+                    <h3>履歴を更新</h3>
+                    <p>
+                        今期の少数派を履歴に追加し、
+                        次の期へ進みます。
+                    </p>
+                </div>
+            </div>
+        </section>
+
         <section class="control-panel">
             <div class="input-group">
                 <label for="agentCount">エージェント人数</label>
@@ -63,6 +208,43 @@
             <p id="errorMessage" class="error-message"></p>
         </section>
 
+        <section class="parameter-guide">
+            <h2>パラメータの意味</h2>
+
+            <div class="parameter-guide-grid">
+
+                <div class="parameter-guide-card">
+                    <h3>エージェント人数 N</h3>
+                    <p>
+                        ゲームに参加するエージェントの人数です。
+                        少数派を必ず決定できるよう、奇数に設定します。
+                    </p>
+                </div>
+
+                <div class="parameter-guide-card">
+                    <h3>記憶長 m</h3>
+                    <p>
+                        各エージェントが参照する、
+                        過去の少数派履歴の長さです。
+                        mが大きいほど、参照できる履歴パターンが増えます。
+                    </p>
+                </div>
+
+                <div class="parameter-guide-card alpha-card">
+                    <h3>α = 2<sup>m</sup> / N</h3>
+                    <p>
+                        記憶可能な履歴パターン数と
+                        エージェント人数の比を表す指標です。
+                    </p>
+
+                    <p>
+                        αを変えることで、
+                        集団の混雑や効率性がどのように変化するかを観察できます。
+                    </p>
+                </div>
+
+            </div>
+        </section>
         <section class="summary-panel">
             <h2>計算結果</h2>
 
@@ -86,6 +268,52 @@
             <p id="statusMessage">
                 条件を設定してシミュレーションを開始してください。
             </p>
+        </section>
+        
+        <section class="result-guide">
+            <h2>結果の読み方</h2>
+
+            <div class="result-guide-grid">
+
+                <div class="result-guide-card">
+                    <h3>α</h3>
+                    <p>
+                        α = 2<sup>m</sup> / N で定義される指標です。
+                        記憶可能な履歴パターン数と、
+                        エージェント人数のバランスを表します。
+                    </p>
+                </div>
+
+                <div class="result-guide-card">
+                    <h3>σ²</h3>
+                    <p>
+                        1を選んだ人数が、
+                        N / 2 からどれだけ変動したかを表します。
+                        値が大きいほど、0と1への集中が大きいことを意味します。
+                    </p>
+                </div>
+
+                <div class="result-guide-card">
+                    <h3>σ² / N</h3>
+                    <p>
+                        σ²をエージェント人数Nで正規化した指標です。
+                        異なる人数のゲームでも、
+                        集団の効率性を比較しやすくなります。
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="interpretation-box">
+                <strong>ポイント</strong>
+
+                <p>
+                    σ² / N が小さいほど、
+                    0と1の人数が均等に近く、
+                    多くのエージェントが少数派として勝てるため、
+                    集団全体として効率的な状態と解釈できます。
+                </p>
+            </div>
         </section>
 
         <section class="chart-panel">
